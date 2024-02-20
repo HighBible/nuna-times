@@ -5,7 +5,7 @@ let news;
 const  getLatestNews = async () => {
   //new 인스턴스
   // const url = new URL (`https://newsapi.org/v2/top-headlines?country=kr&apiKey=${API_KEY}`)
-  const url = new URL (`https://bible-nuna-times.netlify.app/top-headlines?country=kr&pageSize=2`)
+  const url = new URL (`https://bible-nuna-times.netlify.app/top-headlines?country=kr&page=3&pageSize=2`)
   //fetch ; 해당 url에 데이터 요청
   const response = await fetch(url);
   const data = await response.json()

@@ -1,20 +1,43 @@
 
 
 const API_KEY = 'bb51046ed57e470b8dfa522463d8ebc4'
+let url;
 let newsList = []
-const  getLatestNews = async () => {
-  //new 인스턴스
-  // const url = new URL (`https://newsapi.org/v2/top-headlines?country=kr&apiKey=${API_KEY}`)
-  const url = new URL (`https://bible-nuna-times.netlify.app/top-headlines?country=kr`)
-  //fetch ; 해당 url에 데이터 요청
+const menus = document.querySelectorAll('.menus button')
+menus.forEach(menu => menu.addEventListener('click', (event) => getNewsByCategory(event)))
+
+
+const getURL = async () => {
   const response = await fetch(url);
   const data = await response.json()
-
   newsList = data.articles;
   render()
-  console.log(newsList[0].category)
+}
+
+const  getLatestNews = async () => {
+  //new 인스턴스
+  //  url = new URL (`https://newsapi.org/v2/top-headlines?country=kr&apiKey=${API_KEY}`)
+  url = new URL (`https://bible-nuna-times.netlify.app/top-headlines?country=kr`)
+  //fetch ; 해당 url에 데이터 요청
+  getURL()
 }
 getLatestNews()
+
+const getNewsByCategory = async (event) => {
+  const category = event.target.textContent.toLowerCase();
+  // console.log(category)
+    // url = new URL(`https://newsapi.org/v2/top-headlines?country=kr&category=${category}&apiKey=${API_KEY}`)
+    url = new URL (`https://bible-nuna-times.netlify.app/top-headlines?country=kr&category=${category}`)
+  getURL()
+}
+
+const getNewsByKeyword =  async() => {
+  const keyword = document.getElementById('search-input').value;
+  //  url = new URL(`https://newsapi.org/v2/top-headlines?country=kr&q=${keyword}&apiKey=${API_KEY}`)
+  url = new URL (`https://bible-nuna-times.netlify.app/top-headlines?country=kr&q=${keyword}`)
+  getURL()
+}
+
 
 const render = () => {
   const newsHTML = newsList.map( news => 
@@ -36,6 +59,10 @@ const render = () => {
   document.getElementById('news-board').innerHTML = newsHTML
 
 } 
+
+//1. 버튼들에 클릭 이벤트 주기
+//2. 카테고리별 뉴스 가져오기
+//3. 그 뉴스 보여주기
 
 
 

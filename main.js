@@ -6,8 +6,9 @@ let newsList = []
 const menus = document.querySelectorAll('.menus button')
 let totalResults = 0;
 let page = 1;
-const pageSize = 5;
+const pageSize = 12;
 const groupSize = 5;
+let totalPage;
 
 menus.forEach(menu => menu.addEventListener('click', (event) => getNewsByCategory(event)))
 
@@ -95,37 +96,48 @@ document.getElementById('news-board').innerHTML =  errorHTML
 }
 
 const paginationRender = () => {
-  const totalPages =  Math.ceil(totalResults / pageSize);
+  totalPages =  Math.ceil(totalResults / pageSize);
   const pageGroup = Math.ceil(page/groupSize);
-  const lastPage = pageGroup * groupSize;
-  //마지막 페이지 그룹이 그룹 사이즈보다 작다면 la stPage = totalPage 
+  let lastPage = pageGroup * groupSize;
+
+  //마지막 페이지 그룹이 그룹 사이즈보다 작다면 lastPage = totalPage 
   if(lastPage > totalPages) {
     lastPage = totalPages
   }
 
   let firstPage = lastPage - (groupSize - 1) <= 0 ? 1 : lastPage - (groupSize - 1);
-  let paginationHTML = ``
+  let paginationHTML = `<li class="page-item" onclick="moveToPage(${page - 1})"><a class="page-link" href="#">&lt;</a></li>`
+
+
+
+  if(6 <= firstPage) {
+    console.log('more than 6')
+    paginationHTML = `<li class="page-item" onclick="moveToPage(1)"><a class="page-link" href="#">&lt;&lt</a></li>
+    <li class="page-item" onclick="moveToPage(${page - 1})"><a class="page-link" href="#">&lt;</a></li>`
+  }
 
   for(let i = firstPage; i <= lastPage; i++) {
     paginationHTML += `<li class="page-item ${i===page ? 'active' : ''}"  onclick="moveToPage(${i})"><a class="page-link">${i}</a></li>
     `
   }
-  
-  let hidden;
+  console.log('first page ', firstPage, 'last page ', lastPage, 'total page ', totalPages)
 
-if ( 5 < totalPages || totalPages < lastPage) {
-  hidden = false;
-  paginationHTML += `<li class="page-item"><a class="page-link btnNext" aria-label="Next" onclick='moveToGroup(${firstPage})'><span aria-hidden="${hidden}">&raquo;</span></a></li>`
 
+if(totalPages > lastPage) {
+  paginationHTML += `<li class="page-item" onclick="moveToPage(${page + 1})"><a class="page-link" href="#">&gt;</a></li>
+  <li class="page-item last_page" onclick="moveToPage(${totalPages})"><a class="page-link" href="#">&gt;&gt;</a></li>`
 }
+
+// paginationHTML += `<li class="page-item" onclick="moveToPage(${page + 1})"><a class="page-link" href="#">&gt;</a></li>`
 
 document.querySelector('.pagination').innerHTML = paginationHTML
 }
 
 const moveToPage = (pageNumber) => {
-  console.log('move', pageNumber);
+  // console.log('move', pageNumber);
   page = pageNumber;
   getURL()
+
 }
 
 
